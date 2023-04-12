@@ -5,6 +5,7 @@ import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { CategoriesDataSource, CategoriesItem } from './categories-datasource';
 import { CategoryService } from './category.service';
 import { Category } from './category.dto';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-categories',
@@ -27,6 +28,8 @@ export class CategoriesComponent implements OnInit {
 
   showForm : Boolean = false;
   category!:Category;
+  showLoading: Boolean = false;
+  showLoadingForm: Boolean = false;
 
   constructor(private categoryService: CategoryService) {
     
@@ -36,16 +39,45 @@ export class CategoriesComponent implements OnInit {
     this.refreshData();
   }
 
+  /*
+  Old Format
   refreshData(){
+
+    this.showLoading = true;
 
     this.categoryService.getAll().subscribe(
       categories => {
         this.dataSource = new MatTableDataSource(categories);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
-        this.table.dataSource = this.dataSource;
+        //this.table.dataSource = this.dataSource;
+
+        this.showLoading = false;
       }
     )
+  }
+  */
+
+  async refreshData(){
+    this.showLoading = true;
+    
+    try
+    {
+      const categories: Category[] = await lastValueFrom(
+        this.categoryService.getAll()
+      );
+  
+      this.dataSource = new MatTableDataSource(categories);
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;  
+    }
+    catch(error)
+    {
+      console.log("oops", error);
+    }
+    finally{
+      this.showLoading = false;
+    }
   }
 
   onNewCategoryClick(){
@@ -78,11 +110,13 @@ export class CategoriesComponent implements OnInit {
   onSave(category:Category)
   {
     console.log("save on category.component.ts",category);
+    this.showLoadingForm = true;
 
     this.categoryService.save(category).subscribe((categorySaved) => {
         console.log('Category Saved', categorySaved);
         this.showForm = false;
         this.refreshData();
+        this.showLoadingForm = false;
     });
   }
 

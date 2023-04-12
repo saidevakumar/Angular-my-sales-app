@@ -1,11 +1,12 @@
 <mat-card>
   <mat-card-title>Categories</mat-card-title>
   <mat-card-subtitle>Listing all categories</mat-card-subtitle>
+  <app-loading-bar [visible]="showLoading"></app-loading-bar>
 
-  <category-form *ngIf="showForm" (back)="onBackForm()" (save)="onSave($event)" [category]="category"></category-form>
+  <category-form *ngIf="showForm" (back)="onBackForm()" (save)="onSave($event)" [category]="category" [loading]="showLoadingForm"></category-form>
   
-  <mat-card-content *ngIf="!showForm">
-    <table mat-table class="full-width-table" matSort aria-label="Elements">
+  <mat-card-content *ngIf="!showForm && !showLoading">
+    <table mat-table class="full-width-table" matSort aria-label="Elements" [dataSource]="dataSource" fxHide.xs>
       <!-- Id Column -->
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
@@ -35,6 +36,20 @@
      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
    </table>
+   
+   <div fxHide fxShow.xs fxLayoutGap="10">
+    <mat-action-list>
+      <mat-list-item
+        *ngFor="let item of dataSource.data"
+        (click)="onEditCategoryClick(item)"
+      >
+        <h3 matLine>
+          <strong>{{ item.name }}</strong>
+        </h3>
+        <div matLine>{{ item.description }}</div>
+      </mat-list-item>
+    </mat-action-list>
+   </div>
 
    <mat-paginator
      #paginator

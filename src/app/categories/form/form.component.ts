@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Category } from '../category.dto';
 
 @Component({
@@ -12,12 +12,23 @@ export class FormComponent implements OnInit{
 
   @Output() back = new EventEmitter();
   @Output() save = new EventEmitter();
-
+  @Input() loading: Boolean = false;
+  
+  /*
   categoryForm = new FormGroup({
     id: new FormControl<number|null>(null),
     name: new FormControl('',[Validators.required, Validators.minLength(3)]),
     description: new FormControl('')
   })
+  */
+
+  categoryForm = this.fb.group(
+    {
+      id: [0],
+      name: ['',[Validators.required, Validators.minLength(3)]],
+      description: ['']
+    }
+  )
 
   @Input()
   set category(category:Category){
@@ -26,7 +37,7 @@ export class FormComponent implements OnInit{
   
   }
   
-  constructor(){
+  constructor(private fb: FormBuilder){
 
   }
 
