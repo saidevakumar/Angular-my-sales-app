@@ -12,16 +12,16 @@ export class CategoryService {
   constructor(private http:HttpClient) { }
 
   public getAll() : Observable<Category[]> {
-    return this.http.get<Category[]>('http://localhost:3000/categories')
+    return this.http.get<Category[]>('https://northwind.vercel.app/api/categories')
   }
 
   public save(category:Category):Observable<Category> {
-    if (category.id) return this.http.put<Category>('http://localhost:3000/categories/'+ category.id,category);
+    if (category.id) return this.http.put<Category>('https://northwind.vercel.app/api/categories/'+ category.id,category);
 
-    return this.http.post<Category>('http://localhost:3000/categories',category);
+    return this.http.post<Category>('https://northwind.vercel.app/api/categories',category);
   }
 
   public delete(id: number) {
-    return this.http.delete('http://localhost:3000/categories/' + id);
+    return this.http.delete('https://northwind.vercel.app/api/categories/' + id);
   }
 }
