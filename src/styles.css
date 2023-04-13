@@ -22,3 +22,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     border-top-color: #324ec9;
     animation: spinner .8s linear infinite;
 }
+
+.blueOver:hover {
+    background-color: aliceblue;
+    cursor: pointer;
+}
