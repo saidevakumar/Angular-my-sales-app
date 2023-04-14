@@ -30,6 +30,10 @@ export class MenuComponent implements OnInit {
       path: '/suppliers',
       label: 'Suppliers'
     },
+    {
+      path: '/products',
+      label: 'Products'
+    },
   ]
 
   constructor(){
